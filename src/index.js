@@ -74,10 +74,10 @@ function renderHero(hero, h) {
   h3.innerText = hero.hero_name
   let h5 = document.createElement('h5')
   h5.className = "card-title"
-  h5.innerHTML = `${hero.first_name} ${hero.last_name}`
-  let h6 = document.createElement('h6')
-  h6.className = "card-subtitle text-muted"
-  h6.innerText = "This is my Motto"
+  h5.innerText = hero.motto
+  // let h6 = document.createElement('h6')
+  // h6.className = "card-subtitle text-muted"
+  // h6.innerText = hero.motto
   let cardBody1 = document.createElement('div')
   cardBody1.className = "card-body"
   let img = document.createElement('img')
@@ -93,7 +93,7 @@ function renderHero(hero, h) {
   heroBtn.className = "btn btn-link"
   heroBtn.innerText = "View"
   heroBtn.addEventListener("click", () => viewHero(hero))
-  cardBody1.append(h5, h6)
+  cardBody1.append(h5)
   cardBody2.append(p)
   cardDiv.append(h3, cardBody1, img, cardBody2, heroBtn)
 

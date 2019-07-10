@@ -4,6 +4,10 @@ const HERO_URL = "http://localhost:3000/api/v1/heroes"
 const POWER_URL = "http://localhost:3000/api/v1/powers"
 const main = document.querySelector('main')
 
+const arrOne = [1,4,7,10,13,16,19,22,25,28,31,34,37,40,43,46,49,52,55,58,61,64,67,70,73,76,79,82,85,88,91,94,97,100]
+const arrTwo = [2,5,8,11,14,17,20,23,26,29,32,35,38,41,44,47,50,53,56,59,62,65,68,71,74,77,80,83,86,89,92,95,98]
+const arrThree = [3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60,63,66,69,72,75,78,81,84,87,90,93,96,99]
+
 function init() {
 
   getHeroes()
@@ -23,7 +27,7 @@ function renderHeroes(heroes) {
  let h = 0
  heroes.forEach (hero => {
    h += 1
-   renderHero(hero, h)
+   renderHeroCard(hero, h)
  })
 
 }
@@ -60,7 +64,7 @@ function renderHome() {
 
 }
 
-function renderHero(hero, h) {
+function renderHeroCard(hero, h) {
 
   let one = document.getElementById('col-one')
   let two = document.getElementById('col-two')
@@ -68,16 +72,13 @@ function renderHero(hero, h) {
 
   let cardDiv = document.createElement('div')
   cardDiv.className = "card mb-3"
-  one.appendChild(cardDiv)
+  cardDiv.id = `hero-card-${h}`
   let h3 = document.createElement('h3')
   h3.className = "card-header"
   h3.innerText = hero.hero_name
   let h5 = document.createElement('h5')
   h5.className = "card-title"
   h5.innerText = hero.motto
-  // let h6 = document.createElement('h6')
-  // h6.className = "card-subtitle text-muted"
-  // h6.innerText = hero.motto
   let cardBody1 = document.createElement('div')
   cardBody1.className = "card-body"
   let img = document.createElement('img')
@@ -92,22 +93,239 @@ function renderHero(hero, h) {
   let heroBtn = document.createElement('button')
   heroBtn.className = "btn btn-link"
   heroBtn.innerText = "View"
-  heroBtn.addEventListener("click", () => viewHero(hero))
+  heroBtn.addEventListener("click", () => renderHeroFull(hero))
+
+  //append elements to div
   cardBody1.append(h5)
   cardBody2.append(p)
   cardDiv.append(h3, cardBody1, img, cardBody2, heroBtn)
 
+
+  //append card to one of three column based on the value of h
+  if (arrOne.includes(h)) {
+    one.appendChild(cardDiv)
+  } else if (arrTwo.includes(h)) {
+    two.appendChild(cardDiv)
+  } else {
+    three.appendChild(cardDiv)
+  }
 }
 
-function viewHero(hero) {
 
+function renderHeroFull(hero) {
+  debugger
   console.log(hero)
 
 }
 
+
 function createHero() {
-
   main.innerHTML = ""
-  console.log("I'm in your app creating heroes")
+  heroForm()
+}
 
+
+function heroForm() {
+
+  //form header
+  let formJumboDiv = document.createElement(`div`)
+  formJumboDiv.className = "jumbotron text-center"
+  let formJumboH1 = document.createElement('h1')
+  formJumboH1.innerText = "The Superhero Form!"
+
+  //page div
+  let rowDiv = document.createElement('row')
+  rowDiv.className = "row justify-content-md-center"
+  let formDiv = document.createElement('div')
+  formDiv.className = "col-md-3"
+
+  //building the form
+  let formTag = document.createElement('form')
+  let fieldSet = document.createElement('fieldset')
+
+  let formGroupDiv = document.createElement('div')
+  formGroupDiv.className = "form-group"
+
+  //email address
+  let emailLabel = document.createElement('label')
+  emailLabel.innerText = "Email Address"
+  let emailInput = document.createElement('input')
+  emailInput.id = "parents_email"
+  emailInput.className = "form-control"
+
+  //Secret Identity first name
+
+  let firstNameLabel = document.createElement('label')
+  firstNameLabel.innerText = "First Name"
+  let firstName = document.createElement('input')
+  firstName.id = "first_name"
+  firstName.className = "form-control"
+
+  //Secret Identity last Name
+
+  let lastNameLabel = document.createElement('label')
+  lastNameLabel.innerText = "Last Name"
+  let lastName = document.createElement('input')
+  lastName.id = "last_name"
+  lastName.className = "form-control"
+
+  //superhero Name
+
+
+  let heroLabel = document.createElement('label')
+  heroLabel.innerText = "Your Superhero Name!"
+  let heroName = document.createElement('input')
+  heroName.id = "hero_name"
+  heroName.className = "form-control"
+
+  //Superhero motto
+
+  let mottoLabel = document.createElement('label')
+  mottoLabel.innerText = "Your Superhero Motto"
+  let mottoName = document.createElement('input')
+  mottoName.id = "motto"
+  mottoName.className = "form-control"
+
+
+  //costume colors color 1
+
+  let colorSelectOneLabel = document.createElement('label')
+  colorSelectOneLabel.innerText = "Select Color 1"
+  let colorSelectOne = document.createElement('select')
+  colorSelectOne.className = "form-control"
+  colorSelectOne.id = "color_one"
+  let optionRed1 = document.createElement('option')
+  optionRed1.innerText = "Red"
+  let optionOrange1 = document.createElement('option')
+  optionOrange1.innerText = "Orange"
+  let optionYellow1 = document.createElement('option')
+  optionYellow1.innerText = "Yellow"
+  let optionGreen1 = document.createElement('option')
+  optionGreen1.innerText = "Green"
+  let optionBlue1 = document.createElement('option')
+  optionBlue1.innerText = "Blue"
+  let optionIndigo1 = document.createElement('option')
+  optionIndigo1.innerText = "Indigo"
+  let optionViolet1 = document.createElement('option')
+  optionViolet1.innerText = "Violet"
+  let optionWhite1 = document.createElement('option')
+  optionWhite1.innerText = "White"
+  let optionBlack1 = document.createElement('option')
+  optionBlack1.innerText = "Black"
+  let optionSilver1 = document.createElement('option')
+  optionSilver1.innerText = "Silver"
+  let optionGold1 = document.createElement('option')
+  optionGold1.innerText = "Gold"
+  colorSelectOne.append(optionRed1, optionOrange1, optionYellow1, optionGreen1, optionBlue1, optionIndigo1, optionViolet1, optionWhite1, optionBlack1, optionSilver1, optionGold1)
+
+  //costume color 2
+
+  let colorSelectTwoLabel = document.createElement('label')
+  colorSelectTwoLabel.innerText = "Select Color 2"
+  let colorSelectTwo = document.createElement('select')
+  colorSelectTwo.className = "form-control"
+  colorSelectTwo.id = "color_two"
+  let optionRed2 = document.createElement('option')
+  optionRed2.innerText = "Red"
+  let optionOrange2 = document.createElement('option')
+  optionOrange2.innerText = "Orange"
+  let optionYellow2 = document.createElement('option')
+  optionYellow2.innerText = "Yellow"
+  let optionGreen2 = document.createElement('option')
+  optionGreen2.innerText = "Green"
+  let optionBlue2 = document.createElement('option')
+  optionBlue2.innerText = "Blue"
+  let optionIndigo2 = document.createElement('option')
+  optionIndigo2.innerText = "Indigo"
+  let optionViolet2 = document.createElement('option')
+  optionViolet2.innerText = "Violet"
+  let optionWhite2 = document.createElement('option')
+  optionWhite2.innerText = "White"
+  let optionBlack2 = document.createElement('option')
+  optionBlack2.innerText = "Black"
+  let optionSilver2 = document.createElement('option')
+  optionSilver2.innerText = "Silver"
+  let optionGold2 = document.createElement('option')
+  optionGold2.innerText = "Gold"
+  colorSelectTwo.append(optionRed2, optionOrange2, optionYellow2, optionGreen2, optionBlue2, optionIndigo2, optionViolet2, optionWhite2, optionBlack2, optionSilver2, optionGold2)
+
+
+  //origin story
+
+  let originLabel = document.createElement('label')
+  originLabel.innerText = "Origin Story"
+  let originText = document.createElement('textarea')
+  originText.className = "form-control"
+  originText.id = "origin_story"
+
+
+  //origin location
+
+  let locationLabel = document.createElement('label')
+  locationLabel.innerText = "Origin Location"
+  let locationName = document.createElement('input')
+  locationName.id = "origin_location"
+  locationName.className = "form-control"
+
+  //Month and Day of Inception, Birth, Creation, Materialization
+
+  let dobLabel = document.createElement('label')
+  dobLabel.innerText = "Month/Day of Creation"
+  let dobDate = document.createElement('input')
+  dobDate.className = "form-control"
+  dobDate.id = "dob"
+
+  //upload/link and image
+
+  let imgLabel = document.createElement('label')
+  imgLabel.innerText = "URL to a Picture"
+  let imgUrl = document.createElement('input')
+  imgUrl.className = "form-control"
+  imgUrl.id = "img"
+
+
+  //Submit button
+
+  let submitBtn = document.createElement('button')
+  submitBtn.className = "btn btn-primary"
+  submitBtn.innerText = "Create!"
+
+  //Appending Elements to the Dom
+  main.append(formJumboDiv, rowDiv)
+  formJumboDiv.appendChild(formJumboH1)
+  rowDiv.appendChild(formDiv)
+  formDiv.appendChild(formTag)
+  formTag.appendChild(fieldSet)
+  fieldSet.appendChild(formGroupDiv)
+  formGroupDiv.append(emailLabel, emailInput, firstNameLabel, firstName, lastNameLabel, lastName, heroLabel, heroName, mottoLabel, mottoName, colorSelectOneLabel, colorSelectOne, colorSelectTwoLabel, colorSelectTwo, originLabel, originText, locationLabel, locationName, dobLabel, dobDate, imgLabel, imgUrl, submitBtn)
+  const form = document.querySelector("form")
+  form.addEventListener("submit" , () => addHero(form))
+}
+
+
+function addHero(hero) {
+  event.preventDefault();
+
+  fetch(HERO_URL , {
+    method: 'POST',
+    headers: {
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    },
+      body: JSON.stringify({
+      first_name: hero.first_name.value,
+      last_name: hero.last_name.value,
+      hero_name: hero.hero_name.value,
+      motto: hero.motto.value,
+      parents_email: hero.parents_email.value,
+      color_one: hero.color_one.value,
+      color_two: hero.color_two.value,
+      origin_story: hero.origin_story.value,
+      origin_location: hero.origin_location.value,
+      dob: hero.dob.value,
+      img: hero.img.value
+    })
+  })
+  .then(response => response.json())
+  .then(hero => console.log(hero))
 }

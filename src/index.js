@@ -22,7 +22,7 @@ function getHeroes() {
 
 
 function renderHeroes(heroes) {
-
+ main.innerHTML = ""
  renderHome()
  let h = 0
  heroes.forEach (hero => {
@@ -42,7 +42,7 @@ function renderHome() {
   jumboP.innerText = "Your Kid has Incredible Powers!  Let the World Know!"
   let jumboBtn = document.createElement('button')
   jumboBtn.className = "btn btn-primary btn-lg"
-  jumboBtn.innerText = "Superhero Maker!"
+  jumboBtn.innerText = "Let's Do This!"
   jumboBtn.addEventListener("click", createHero)
   let contDiv = document.createElement('div')
   contDiv.className = "container"
@@ -382,3 +382,91 @@ function editHero(hero) {
   heroForm(hero)
   //   form.dob.value = "january"
 }
+
+
+function getPowers() {
+  return fetch(POWER_URL)
+  .then(resp => resp.json())
+  .then(powers => renderPowers(powers))
+}
+
+function renderPowers(powers) {
+  main.innerHTML = ""
+  renderPowerHome()
+  let pow = 0
+  powers.forEach(power => {
+    pow += 1
+    renderPowerCard(power, pow)
+  })
+
+}
+
+function renderPowerHome() {
+
+
+    let jumboPowerDiv = document.createElement(`div`)
+    jumboPowerDiv.className = "jumbotron text-center"
+    let jumboPowerH1 = document.createElement('h1')
+    jumboPowerH1.innerText = "Powers!"
+    let jumboPowerP = document.createElement('p')
+    jumboPowerP.innerText = "These are all the Powers You Could Have"
+    let contPowerDiv = document.createElement('div')
+    contPowerDiv.className = "container"
+    let rowPowerDiv = document.createElement('div')
+    rowPowerDiv.className = "row"
+    let onePowerDiv = document.createElement('div')
+    onePowerDiv.className = "col-sm-4"
+    onePowerDiv.id = "col-one"
+    let twoPowerDiv = document.createElement('div')
+    twoPowerDiv.className = "col-sm-4"
+    twoPowerDiv.id = "col-two"
+    let threePowerDiv = document.createElement('div')
+    threePowerDiv.className = "col-sm-4"
+    threePowerDiv.id = "col-three"
+    main.append(jumboPowerDiv, contPowerDiv)
+    jumboPowerDiv.append(jumboPowerH1, jumboPowerP)
+    contPowerDiv.appendChild(rowPowerDiv)
+    rowPowerDiv.append(onePowerDiv, twoPowerDiv, threePowerDiv)
+
+
+}
+
+function renderPowerCard(power, pow) {
+
+
+    let onePower = document.getElementById('col-one')
+    let twoPower = document.getElementById('col-two')
+    let threePower = document.getElementById('col-three')
+
+    let cardPowerDiv = document.createElement('div')
+    cardPowerDiv.className = "card mb-3"
+    cardPowerDiv.id = `power-card-${pow}`
+    let powerH3 = document.createElement('h3')
+    powerH3.className = "card-header"
+    powerH3.innerText = power.name
+    let cardPowerBody1 = document.createElement('div')
+    cardPowerBody1.className = "card-body"
+    let powerImg = document.createElement('img')
+    powerImg.src = power.icon
+    let cardPowerBody2 = document.createElement('div')
+    cardPowerBody2.className = "card-body"
+    let powerH5 = document.createElement('h5')
+    powerH5.className = "card-title"
+    powerH5.innerText = power.description
+
+
+
+    //append elements to div
+    cardPowerBody2.append(powerH5)
+    cardPowerDiv.append(powerH3, cardPowerBody1, powerImg, cardPowerBody2)
+
+
+    //append card to one of three column based on the value of pow
+    if (arrOne.includes(pow)) {
+      onePower.appendChild(cardPowerDiv)
+    } else if (arrTwo.includes(pow)) {
+      twoPower.appendChild(cardPowerDiv)
+    } else {
+      threePower.appendChild(cardPowerDiv)
+    }
+  }

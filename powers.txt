@@ -1,0 +1,15 @@
+
+
+Speed  "Run faster and faster than a Cheetah in the wild"  003-speed.png
+Energy "Like a tiny awesome battery, discharge power from your fingertips" 004-superpower.png
+Elasticity "Reach any cookie, even those kept on the highest shelf" 004-elastic.png
+Invisibility "If you don't want your brother to see you, he won't." 024-invisible.png
+Weather control "Clear away cloudy skies and bring out the sun to play"  026-superpower-2.png
+Strength "Lift the couch over your head to find any lost toy" 029-strength.png
+Telekinesis "Clean up your room with the power of your mind!"  034-telekinesis.png
+Flight "Soar above the clouds.  But listen to your parents: not too close to the sun" 036-fly-1.png
+Psychic "Read minds and know which games your friends want to play before they say" 040-psychic.png
+Agility "Navigate any playground obsticle course with speed" 044-agility.png
+Resize "Grow bigger than a house, or shrink to smaller than a mouse" 046-resize.png
+Force field "Keep away bugs and bathtime with a glowing shield of energy" 048-force-field-1.png
+Teleportation "Want to read a book?  Transport yourself to the library in an instant!" 049-teleport.png

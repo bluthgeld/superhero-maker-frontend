@@ -82,7 +82,7 @@ function renderHeroCard(hero, h) {
   let cardBody1 = document.createElement('div')
   cardBody1.className = "card-body"
   let img = document.createElement('img')
-  img.src = hero.img
+  img.src = hero.image
   let cardBody2 = document.createElement('div')
   cardBody2.className = "card-body"
   let p = document.createElement('p')
@@ -113,9 +113,55 @@ function renderHeroCard(hero, h) {
 
 
 function renderHeroFull(hero) {
-  debugger
-  console.log(hero)
+  main.innerHTML = ""
+  let heroJumboDiv = document.createElement('div')
+  heroJumboDiv.className = "jumbotron text-center"
+  let heroJumboH1 = document.createElement('h1')
+  heroJumboH1.innerText = hero.hero_name
+  let mottoJumboH3 = document.createElement('h3')
+  mottoJumboH3.innerText = hero.motto
 
+  let heroRow = document.createElement('div')
+  heroRow.className = "row justify-content-lg-center"
+  let heroDiv = document.createElement('div')
+  heroDiv.className = "col-lg-6"
+  heroRow.appendChild(heroDiv)
+
+  let nameH2 = document.createElement('h2')
+  nameH2.innerText = "Secret Identity"
+  let nameP = document.createElement('p')
+  nameP.innerText = `${hero.first_name} ${hero.last_name}`
+
+  let costumeH2 = document.createElement('h2')
+  costumeH2.innerText = "Costume Colors"
+  let costumeP = document.createElement('p')
+  costumeP.innerText = `${hero.hero_name}'s costume is ${hero.color_one.toUpperCase()} and ${hero.color_two.toUpperCase()}.`
+
+  let originH2 = document.createElement('h2')
+
+
+  let powersH2 = document.createElement('h2')
+  powersH2.innerText = `${hero.hero_name}'s Incredible Powers`
+  hero.powers.forEach( power => {
+    let powerH3 = document.createElement('h3')
+    powerH3.id = power.id
+    powerH3.innerText = power.name
+    powersH2.append(powerH3)
+    power.hero_powers.forEach(level => {
+      levelH5 = document.createElement('h5')
+      levelH5.innerText = `Power Level is ${level.power_level}`
+      powerH3.append(levelH5)
+    })
+  })
+
+  let editHeroBtn = document.createElement('button')
+  editHeroBtn.className = "btn btn-primary btn-lg"
+  editHeroBtn.innerText = "Edit Hero!"
+  editHeroBtn.addEventListener('click', () => editHero(hero))
+
+  heroDiv.append(nameH2, nameP, costumeH2, costumeP, powersH2, editHeroBtn)
+  main.append(heroJumboDiv, heroRow)
+  heroJumboDiv.append(heroJumboH1, mottoJumboH3)
 }
 
 
@@ -125,14 +171,12 @@ function createHero() {
 }
 
 
-function heroForm() {
-
+function heroForm(hero) {
   //form header
-  let formJumboDiv = document.createElement(`div`)
+  let formJumboDiv = document.createElement('div')
   formJumboDiv.className = "jumbotron text-center"
   let formJumboH1 = document.createElement('h1')
   formJumboH1.innerText = "The Superhero Form!"
-
   //page div
   let rowDiv = document.createElement('row')
   rowDiv.className = "row justify-content-md-center"
@@ -281,7 +325,7 @@ function heroForm() {
   imgLabel.innerText = "URL to a Picture"
   let imgUrl = document.createElement('input')
   imgUrl.className = "form-control"
-  imgUrl.id = "img"
+  imgUrl.id = "image"
 
 
   //Submit button
@@ -300,6 +344,8 @@ function heroForm() {
   formGroupDiv.append(emailLabel, emailInput, firstNameLabel, firstName, lastNameLabel, lastName, heroLabel, heroName, mottoLabel, mottoName, colorSelectOneLabel, colorSelectOne, colorSelectTwoLabel, colorSelectTwo, originLabel, originText, locationLabel, locationName, dobLabel, dobDate, imgLabel, imgUrl, submitBtn)
   const form = document.querySelector("form")
   form.addEventListener("submit" , () => addHero(form))
+
+
 }
 
 
@@ -323,9 +369,16 @@ function addHero(hero) {
       origin_story: hero.origin_story.value,
       origin_location: hero.origin_location.value,
       dob: hero.dob.value,
-      img: hero.img.value
+      image: hero.image.value
     })
   })
   .then(response => response.json())
-  .then(hero => console.log(hero))
+  .then(hero => renderHeroFull(hero))
+}
+
+
+function editHero(hero) {
+  main.innerHTML = ""
+  heroForm(hero)
+  //   form.dob.value = "january"
 }

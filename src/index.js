@@ -784,28 +784,48 @@ function renderPowerCard(power, pow) {
         cpCardBody3.appendChild(cpH61)
       }
     })
+
     cpCardBody1.appendChild(cpImage)
     cpCardBody2.appendChild(cpH6)
-    hpCardDiv.append(hpH5, cpCardBody1, cpCardBody2, cpCardBody3)
+    let powerFooter = document.createElement('div')
+    powerFooter.className = "card-footer"
+    powerFooter.setAttribute("style","text-align: center;")
+    let deletePwrBtn = document.createElement('button')
+    deletePwrBtn.className = "btn btn-link"
+    deletePwrBtn.innerText = "Delete Power!"
+    deletePwrBtn.addEventListener('click', () => deletePower(power))
+    powerFooter.appendChild(deletePwrBtn)
+    hpCardDiv.append(hpH5, cpCardBody1, cpCardBody2, cpCardBody3, powerFooter)
+
     let hp_target = document.getElementById("hpCardTarget")
     hp_target.appendChild(hpCardDiv)
   }
 
 function deletePower(power) {
+
+  let c = confirm("Do You Really Want to Delete this Power?")
   let powerId = power.id
-  fetch(HP_URL + "/" + `${power.hero_powers[0].id}`, {
-    method: 'DELETE',
-    headers: {
-      "Content-Type": "application/json",
-      "Accept": "application/json"
-    },
-      body: JSON.stringify({
-      id: power.hero_powers[0].id
+  if (c == true) {
+
+    fetch(HP_URL + "/" + `${power.hero_powers[0].id}`, {
+      method: 'DELETE',
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      },
+        body: JSON.stringify({
+        id: power.hero_powers[0].id
+      })
     })
-  })
-  .then(response => response.json())
-  .then(power => {
-    let del = document.getElementById(`hp-card-${powerId}`)
-    del.remove()
-  })
+    .then(response => response.json())
+    .then(power => {
+      let del = document.getElementById(`hp-card-${powerId}`)
+      del.remove()
+      alert("The Power Has Been Removed")
+    })
+
+  } else {
+    alert("You Have Made a Good Choice!")
+  }
+
 }

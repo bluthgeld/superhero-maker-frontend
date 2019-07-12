@@ -336,7 +336,32 @@ function createHero() {
 }
 
 function deleteHero(hero){
-  console.log("delete me now")
+  let c = confirm("Do You Really Want to Delete this Incredible Kid?")
+  if (c == true) {
+
+    fetch(HERO_URL + "/" + `${hero.id}`, {
+      method: 'DELETE',
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      },
+        body: JSON.stringify({
+        id: hero.id
+      })
+    })
+    .then(response => response.json())
+    .then(power => {
+      console.log(hero)
+      main.innerHTML = ""
+      getHeroes()
+      alert("The Hero Has Been Deleted")
+    })
+
+  } else {
+    alert("You Have Made a Good Choice!")
+  }
+
+
 }
 
 function heroForm(hero) {
@@ -769,20 +794,20 @@ function renderPowerCard(power, pow) {
   }
 
 function deletePower(power) {
-  let id = power.id
-  fetch(HP_URL + "/" + `${id}`, {
+  let powerId = power.id
+  fetch(HP_URL + "/" + `${power.hero_powers[0].id}`, {
     method: 'DELETE',
     headers: {
       "Content-Type": "application/json",
       "Accept": "application/json"
     },
       body: JSON.stringify({
-      id: id
+      id: power.hero_powers[0].id
     })
   })
   .then(response => response.json())
   .then(power => {
-    let del = document.getElementById(`hp-card-${id}`)
+    let del = document.getElementById(`hp-card-${powerId}`)
     del.remove()
   })
 }

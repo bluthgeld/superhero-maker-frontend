@@ -315,7 +315,6 @@ function renderHeroFull(hero) {
 
   })
 
-
   //append elements to div
 
   cardBodyA.append(cardH51, cardH52, cardH53, cardH54, cardP, cardH55)
@@ -360,8 +359,6 @@ function deleteHero(hero){
   } else {
     alert("You Have Made a Good Choice!")
   }
-
-
 }
 
 function heroForm(hero) {
@@ -544,6 +541,7 @@ function heroForm(hero) {
     form.addEventListener("submit" , () => updateHero(form))
 
     // for the edit, default values
+    form.parents_email.value = hero.parents_email
     form.hero_name.value = hero.hero_name
     form.first_name.value = hero.first_name
     form.last_name.value = hero.last_name

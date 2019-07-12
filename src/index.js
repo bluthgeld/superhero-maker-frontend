@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', init )
 
 const HERO_URL = "http://localhost:3000/api/v1/heroes"
 const POWER_URL = "http://localhost:3000/api/v1/powers"
+const HP_URL = "http://localhost:3000/api/v1/hero_powers"
 const main = document.querySelector('main')
 
 const arrOne = [1,4,7,10,13,16,19,22,25,28,31,34,37,40,43,46,49,52,55,58,61,64,67,70,73,76,79,82,85,88,91,94,97,100]
@@ -83,6 +84,7 @@ function renderHeroCard(hero, h) {
   cardBody1.className = "card-body"
   let img = document.createElement('img')
   img.src = hero.image
+  img.setAttribute("style","height: auto; width: 100%; display: block; margin: auto;")
   let cardBody2 = document.createElement('div')
   cardBody2.className = "card-body"
   let p = document.createElement('p')
@@ -114,6 +116,7 @@ function renderHeroCard(hero, h) {
 
 function renderHeroFull(hero) {
   main.innerHTML = ""
+  let fullhero = hero.id
   let heroJumboDiv = document.createElement('div')
   heroJumboDiv.className = "jumbotron text-center"
   let heroJumboH1 = document.createElement('h1')
@@ -124,44 +127,206 @@ function renderHeroFull(hero) {
   let heroRow = document.createElement('div')
   heroRow.className = "row justify-content-lg-center"
   let heroDiv = document.createElement('div')
-  heroDiv.className = "col-lg-6"
+  heroDiv.className = "col-md-6"
   heroRow.appendChild(heroDiv)
-
-  let nameH2 = document.createElement('h2')
-  nameH2.innerText = "Secret Identity"
-  let nameP = document.createElement('p')
-  nameP.innerText = `${hero.first_name} ${hero.last_name}`
-
-  let costumeH2 = document.createElement('h2')
-  costumeH2.innerText = "Costume Colors"
-  let costumeP = document.createElement('p')
-  costumeP.innerText = `${hero.hero_name}'s costume is ${hero.color_one.toUpperCase()} and ${hero.color_two.toUpperCase()}.`
-
-  let originH2 = document.createElement('h2')
+  let heroCardDiv = document.createElement('div')
+  heroCardDiv.className = "card mb-3"
+  heroDiv.appendChild(heroCardDiv)
+  let heroH3 = document.createElement('h3')
+  heroH3.className = "card-header"
+  heroH3.innerText = hero.hero_name
+  let heroImage = document.createElement('img')
+  heroImage.src = hero.image
+  heroImage.setAttribute("style","height: auto; width: 100%; display: block;")
 
 
-  let powersH2 = document.createElement('h2')
-  powersH2.innerText = `${hero.hero_name}'s Incredible Powers`
-  hero.powers.forEach( power => {
-    let powerH3 = document.createElement('h3')
-    powerH3.id = power.id
-    powerH3.innerText = power.name
-    powersH2.append(powerH3)
-    power.hero_powers.forEach(level => {
-      levelH5 = document.createElement('h5')
-      levelH5.innerText = `Power Level is ${level.power_level}`
-      powerH3.append(levelH5)
-    })
-  })
+  let cardBodyA = document.createElement('div')
+  cardBodyA.className = "card-body"
+  let cardH51 = document.createElement('h5')
+  cardH51.className = "card-title"
+  cardH51.innerText = `Secret Identity: ${hero.first_name} ${hero.last_name}`
 
+  let cardH52 = document.createElement('h5')
+  cardH52.className = "card-title"
+  cardH52.innerText = `${hero.hero_name}'s Costume Colors are ${hero.color_one} and ${hero.color_two}`
+
+  let cardH53 = document.createElement('h5')
+  cardH53.className = "card-title"
+  cardH53.innerText = `Origin Location: ${hero.origin_location}`
+
+  let cardH54 = document.createElement('h5')
+  cardH54.className = "card-title"
+  cardH54.innerText = `Origin Story:`
+
+  let cardP = document.createElement('p')
+  cardP.className = "card-text"
+  cardP.innerText = `${hero.origin_story}`
+
+  let cardH55 = document.createElement('h5')
+  cardH55.className = "card-title"
+  cardH55.innerText = `Birth/Inception/Materialization Date: ${hero.dob}`
+
+  let cardFooter = document.createElement('div')
+  cardFooter.className = "card-footer"
+  cardFooter.setAttribute("style","text-align: center;")
   let editHeroBtn = document.createElement('button')
-  editHeroBtn.className = "btn btn-primary btn-lg"
+  editHeroBtn.className = "btn btn-link"
   editHeroBtn.innerText = "Edit Hero!"
   editHeroBtn.addEventListener('click', () => editHero(hero))
+  let deleteHeroBtn = document.createElement('button')
+  deleteHeroBtn.className = "btn btn-link"
+  deleteHeroBtn.innerText = "Delete Hero!"
+  deleteHeroBtn.addEventListener('click', () => deleteHero(hero))
 
-  heroDiv.append(nameH2, nameP, costumeH2, costumeP, powersH2, editHeroBtn)
+//define the header and div for the powers
+  let cardBodyB = document.createElement('div')
+  cardBodyB.className = "card-body"
+  let cardH56 = document.createElement('h5')
+  cardH56.className = "card-title"
+  cardH56.innerText = "Incredible Powers"
+
+
+  //page div
+  let powerRowDiv = document.createElement('row')
+  powerRowDiv.className = "row justify-content-md-center"
+  let powerFormDiv = document.createElement('div')
+  powerFormDiv.className = "col-md-3"
+
+  //building the form
+  let powerFormTag = document.createElement('form')
+  powerFormTag.id = "add_power_form"
+  let powerFieldSet = document.createElement('fieldset')
+  let powerFormGroupDiv = document.createElement('div')
+  powerFormGroupDiv.className = "form-group"
+  powerRowDiv.appendChild(powerFormDiv)
+  powerFormDiv.appendChild(powerFormTag)
+  powerFormTag.appendChild(powerFieldSet)
+  powerFieldSet.appendChild(powerFormGroupDiv)
+
+
+  let powerSelect = document.createElement('select')
+  powerSelect.className = "form-control"
+  powerSelect.id = "power"
+  let speed = document.createElement('option')
+  speed.innerText = "Speed"
+  speed.setAttribute("value","1")
+  let energy = document.createElement('option')
+  energy.innerText = "Energy"
+  energy.setAttribute("value","2")
+  let elasticity = document.createElement('option')
+  elasticity.innerText = "Elasticity"
+  elasticity.setAttribute("value","3")
+  let invisible = document.createElement('option')
+  invisible.innerText = "Invisibility"
+  invisible.setAttribute("value","4")
+  let weather = document.createElement('option')
+  weather.innerText = "Weather Control"
+  weather.setAttribute("value","5")
+  let strength = document.createElement('option')
+  strength.innerText = "Strength"
+  strength.setAttribute("value","6")
+  let tele = document.createElement('option')
+  tele.innerText = "Telekinesis"
+  tele.setAttribute("value","7")
+  let flight = document.createElement('option')
+  flight.innerText = "Flight"
+  flight.setAttribute("value","8")
+  let psychic = document.createElement('option')
+  psychic.innerText = "Psychic Ability"
+  psychic.setAttribute("value","9")
+  let agility = document.createElement('option')
+  agility.innerText = "Agility"
+  agility.setAttribute("value","10")
+  let resize = document.createElement('option')
+  resize.innerText = "Resize"
+  resize.setAttribute("value","11")
+  let forcefield = document.createElement('option')
+  forcefield.innerText = "Force Field"
+  forcefield.setAttribute("value","12")
+  let teleportation = document.createElement('option')
+  teleportation.innerText = "Teleportation"
+  teleportation.setAttribute("value","13")
+
+  let powerLabel = document.createElement('label')
+  powerLabel.innerText = "Set Power Level"
+  let powerInput = document.createElement('input')
+  powerInput.id = "power_level"
+  powerInput.className = "form-control"
+  let heroPowerId = document.createElement('input')
+  heroPowerId.id = "heroId"
+  heroPowerId.setAttribute("type", "hidden")
+  heroPowerId.setAttribute("value", fullhero)
+  let pwrBtn = document.createElement('button')
+  pwrBtn.className = "btn btn-primary btn-sm"
+  pwrBtn.id = fullhero
+  pwrBtn.innerText = "Add"
+
+  powerFormGroupDiv.append(powerSelect, powerLabel, powerInput, heroPowerId, pwrBtn)
+  powerSelect.append(speed, energy, elasticity, invisible, weather, strength, tele, flight, psychic, agility, resize, forcefield, teleportation)
+
+  let hpDiv = document.createElement('div')
+  hpDiv.className = "card-body"
+  hpDiv.id = "hpCardTarget"
+  hpDiv.setAttribute("style","display: block; margin: auto;")
+
+// loop through the hero's powers here and add them to the card
+  hero.powers.forEach( power => {
+    let hpCardDiv = document.createElement('div')
+    hpCardDiv.className = "card mb-1"
+    hpCardDiv.id =`hp-card-${power.id}`
+    hpCardDiv.setAttribute("style","width: 25rem;")
+    let hpH5 = document.createElement('h5')
+    hpH5.className = "card-header"
+    hpH5.innerText = power.name
+    let cpCardBody1 = document.createElement('div')
+    cpCardBody1.className = "card-body"
+    let cpImage = document.createElement('img')
+    cpImage.src = power.icon
+    cpImage.setAttribute("style","height: auto; width: 95%; display: block; margin: auto;")
+    let cpCardBody2 = document.createElement('div')
+    cpCardBody2.className = "card-body"
+    let cpH6 = document.createElement('h5')
+    cpH6.className = "card-title"
+    cpH6.innerText = power.description
+    let cpCardBody3 = document.createElement('div')
+    cpCardBody3.className = "card-body"
+  //add hero powers here
+    power.hero_powers.forEach(level => {
+      if (level.hero_id === fullhero) {
+        let cpH61 = document.createElement('h5')
+        cpH61.className = "card-title"
+        cpH61.innerText = `Power Level: ${level.power_level}`
+        cpCardBody3.appendChild(cpH61)
+      }
+
+    })
+    cpCardBody1.appendChild(cpImage)
+    cpCardBody2.appendChild(cpH6)
+    let powerFooter = document.createElement('div')
+    powerFooter.className = "card-footer"
+    powerFooter.setAttribute("style","text-align: center;")
+    let deletePwrBtn = document.createElement('button')
+    deletePwrBtn.className = "btn btn-link"
+    deletePwrBtn.innerText = "Delete Power!"
+    deletePwrBtn.addEventListener('click', () => deletePower(power))
+    powerFooter.appendChild(deletePwrBtn)
+    hpCardDiv.append(hpH5, cpCardBody1, cpCardBody2, cpCardBody3, powerFooter)
+    hpDiv.append(hpCardDiv)
+
+  })
+
+
+  //append elements to div
+
+  cardBodyA.append(cardH51, cardH52, cardH53, cardH54, cardP, cardH55)
+  cardBodyB.append(cardH56)
+  cardFooter.append(editHeroBtn, deleteHeroBtn)
+  heroCardDiv.append(heroH3, heroImage, cardBodyA, cardBodyB, powerRowDiv, hpDiv, cardFooter)
   main.append(heroJumboDiv, heroRow)
   heroJumboDiv.append(heroJumboH1, mottoJumboH3)
+
+  let addPowerForm = document.getElementById("add_power_form")
+  addPowerForm.addEventListener("submit", () => addNewPower(addPowerForm))
 }
 
 
@@ -170,13 +335,12 @@ function createHero() {
   heroForm()
 }
 
+function deleteHero(hero){
+  console.log("delete me now")
+}
 
 function heroForm(hero) {
-  //form header
-  let formJumboDiv = document.createElement('div')
-  formJumboDiv.className = "jumbotron text-center"
-  let formJumboH1 = document.createElement('h1')
-  formJumboH1.innerText = "The Superhero Form!"
+
   //page div
   let rowDiv = document.createElement('row')
   rowDiv.className = "row justify-content-md-center"
@@ -186,9 +350,9 @@ function heroForm(hero) {
   //building the form
   let formTag = document.createElement('form')
   let fieldSet = document.createElement('fieldset')
-
   let formGroupDiv = document.createElement('div')
   formGroupDiv.className = "form-group"
+
 
   //email address
   let emailLabel = document.createElement('label')
@@ -198,7 +362,6 @@ function heroForm(hero) {
   emailInput.className = "form-control"
 
   //Secret Identity first name
-
   let firstNameLabel = document.createElement('label')
   firstNameLabel.innerText = "First Name"
   let firstName = document.createElement('input')
@@ -206,7 +369,6 @@ function heroForm(hero) {
   firstName.className = "form-control"
 
   //Secret Identity last Name
-
   let lastNameLabel = document.createElement('label')
   lastNameLabel.innerText = "Last Name"
   let lastName = document.createElement('input')
@@ -214,8 +376,6 @@ function heroForm(hero) {
   lastName.className = "form-control"
 
   //superhero Name
-
-
   let heroLabel = document.createElement('label')
   heroLabel.innerText = "Your Superhero Name!"
   let heroName = document.createElement('input')
@@ -223,7 +383,6 @@ function heroForm(hero) {
   heroName.className = "form-control"
 
   //Superhero motto
-
   let mottoLabel = document.createElement('label')
   mottoLabel.innerText = "Your Superhero Motto"
   let mottoName = document.createElement('input')
@@ -327,24 +486,77 @@ function heroForm(hero) {
   imgUrl.className = "form-control"
   imgUrl.id = "image"
 
+  if (hero) {
 
-  //Submit button
+    //form header
+    let formJumboDiv = document.createElement('div')
+    formJumboDiv.className = "jumbotron text-center"
+    let formJumboH1 = document.createElement('h1')
+    formJumboH1.innerText = `Edit Superhero ${hero.hero_name}`
 
-  let submitBtn = document.createElement('button')
-  submitBtn.className = "btn btn-primary"
-  submitBtn.innerText = "Create!"
+    let heroId = document.createElement('input')
+    heroId.id = "heroId"
+    heroId.setAttribute("type", "hidden")
+    heroId.setAttribute("value", hero.id)
 
-  //Appending Elements to the Dom
-  main.append(formJumboDiv, rowDiv)
-  formJumboDiv.appendChild(formJumboH1)
-  rowDiv.appendChild(formDiv)
-  formDiv.appendChild(formTag)
-  formTag.appendChild(fieldSet)
-  fieldSet.appendChild(formGroupDiv)
-  formGroupDiv.append(emailLabel, emailInput, firstNameLabel, firstName, lastNameLabel, lastName, heroLabel, heroName, mottoLabel, mottoName, colorSelectOneLabel, colorSelectOne, colorSelectTwoLabel, colorSelectTwo, originLabel, originText, locationLabel, locationName, dobLabel, dobDate, imgLabel, imgUrl, submitBtn)
-  const form = document.querySelector("form")
-  form.addEventListener("submit" , () => addHero(form))
 
+    //Submit button
+    let submitBtn = document.createElement('button')
+    submitBtn.className = "btn btn-primary"
+    submitBtn.innerText = "Update!"
+
+    //Appending Elements to the Dom
+    main.append(formJumboDiv, rowDiv)
+    formJumboDiv.appendChild(formJumboH1)
+    rowDiv.appendChild(formDiv)
+    formDiv.appendChild(formTag)
+    formTag.appendChild(fieldSet)
+    fieldSet.appendChild(formGroupDiv)
+    formGroupDiv.append(heroId, emailLabel, emailInput, firstNameLabel, firstName, lastNameLabel, lastName, heroLabel, heroName, mottoLabel, mottoName, colorSelectOneLabel, colorSelectOne, colorSelectTwoLabel, colorSelectTwo, originLabel, originText, locationLabel, locationName, dobLabel, dobDate, imgLabel, imgUrl, submitBtn)
+
+
+    let form = document.querySelector("form")
+    form.addEventListener("submit" , () => updateHero(form))
+
+    // for the edit, default values
+    form.hero_name.value = hero.hero_name
+    form.first_name.value = hero.first_name
+    form.last_name.value = hero.last_name
+    form.motto.value = hero.motto
+    form.color_one.value = hero.color_one
+    form.color_two.value = hero.color_two
+    form.origin_story.value = hero.origin_story
+    form.origin_location.value = hero.origin_location
+    form.dob.value = hero.dob
+    form.image.value = hero.image
+
+
+  } else {
+
+    //form header
+    let formJumboDiv = document.createElement('div')
+    formJumboDiv.className = "jumbotron text-center"
+    let formJumboH1 = document.createElement('h1')
+    formJumboH1.innerText = "The Superhero Form!"
+
+    //Submit button
+    let submitBtn = document.createElement('button')
+    submitBtn.className = "btn btn-primary"
+    submitBtn.innerText = "Create!"
+
+    //Appending Elements to the Dom
+    main.append(formJumboDiv, rowDiv)
+    formJumboDiv.appendChild(formJumboH1)
+    rowDiv.appendChild(formDiv)
+    formDiv.appendChild(formTag)
+    formTag.appendChild(fieldSet)
+    fieldSet.appendChild(formGroupDiv)
+    formGroupDiv.append(emailLabel, emailInput, firstNameLabel, firstName, lastNameLabel, lastName, heroLabel, heroName, mottoLabel, mottoName, colorSelectOneLabel, colorSelectOne, colorSelectTwoLabel, colorSelectTwo, originLabel, originText, locationLabel, locationName, dobLabel, dobDate, imgLabel, imgUrl, submitBtn)
+
+    let form = document.querySelector("form")
+    form.addEventListener("submit" , () => addHero(form))
+
+  }
 
 }
 
@@ -354,6 +566,34 @@ function addHero(hero) {
 
   fetch(HERO_URL , {
     method: 'POST',
+    headers: {
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    },
+      body: JSON.stringify({
+      first_name: hero.first_name.value,
+      last_name: hero.last_name.value,
+      hero_name: hero.hero_name.value,
+      motto: hero.motto.value,
+      parents_email: hero.parents_email.value,
+      color_one: hero.color_one.value,
+      color_two: hero.color_two.value,
+      origin_story: hero.origin_story.value,
+      origin_location: hero.origin_location.value,
+      dob: hero.dob.value,
+      image: hero.image.value
+    })
+  })
+  .then(response => response.json())
+  .then(hero => renderHeroFull(hero))
+}
+
+function updateHero(hero){
+  event.preventDefault();
+  let id = hero.heroId.value
+
+  fetch(HERO_URL + "/" + `${id}` , {
+    method: 'PATCH',
     headers: {
       "Content-Type": "application/json",
       "Accept": "application/json"
@@ -402,8 +642,6 @@ function renderPowers(powers) {
 }
 
 function renderPowerHome() {
-
-
     let jumboPowerDiv = document.createElement(`div`)
     jumboPowerDiv.className = "jumbotron text-center"
     let jumboPowerH1 = document.createElement('h1')
@@ -427,13 +665,9 @@ function renderPowerHome() {
     jumboPowerDiv.append(jumboPowerH1, jumboPowerP)
     contPowerDiv.appendChild(rowPowerDiv)
     rowPowerDiv.append(onePowerDiv, twoPowerDiv, threePowerDiv)
-
-
 }
 
 function renderPowerCard(power, pow) {
-
-
     let onePower = document.getElementById('col-one')
     let twoPower = document.getElementById('col-two')
     let threePower = document.getElementById('col-three')
@@ -448,6 +682,7 @@ function renderPowerCard(power, pow) {
     cardPowerBody1.className = "card-body"
     let powerImg = document.createElement('img')
     powerImg.src = power.icon
+    powerImg.setAttribute("style","height: auto; width: 95%; display: block; margin: auto;")
     let cardPowerBody2 = document.createElement('div')
     cardPowerBody2.className = "card-body"
     let powerH5 = document.createElement('h5')
@@ -470,3 +705,84 @@ function renderPowerCard(power, pow) {
       threePower.appendChild(cardPowerDiv)
     }
   }
+
+  function addNewPower(form) {
+    event.preventDefault();
+
+      fetch(HP_URL , {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+          body: JSON.stringify({
+          power_id: form.power.value,
+          hero_id: form.heroId.value,
+          power_level: form.power_level.value
+        })
+      })
+      .then(response => response.json())
+      .then(power => getPower(power))
+  }
+
+  function getPower(power) {
+      let hero = power.hero_id
+     fetch(POWER_URL + "/" + `${power.power_id}`)
+    .then(resp => resp.json())
+    .then(power => renderNewPower(power, hero))
+  }
+
+  function renderNewPower(power,hero) {
+    let hpCardDiv = document.createElement('div')
+    hpCardDiv.className = "card mb-1"
+    hpCardDiv.id =`hp-card-${power.id}`
+    hpCardDiv.setAttribute("style","width: 25rem;")
+    let hpH5 = document.createElement('h5')
+    hpH5.className = "card-header"
+    hpH5.innerText = power.name
+    let cpCardBody1 = document.createElement('div')
+    cpCardBody1.className = "card-body"
+    let cpImage = document.createElement('img')
+    cpImage.src = power.icon
+    cpImage.setAttribute("style","height: auto; width: 95%; display: block; margin: auto;")
+    let cpCardBody2 = document.createElement('div')
+    cpCardBody2.className = "card-body"
+    let cpH6 = document.createElement('h5')
+    cpH6.className = "card-title"
+    cpH6.innerText = power.description
+    let cpCardBody3 = document.createElement('div')
+    cpCardBody3.className = "card-body"
+  //add hero powers here
+    power.hero_powers.forEach(level => {
+      if (level.hero_id === hero) {
+        let cpH61 = document.createElement('h5')
+        cpH61.className = "card-title"
+        cpH61.innerText = `Power Level: ${level.power_level}`
+        cpCardBody3.appendChild(cpH61)
+      }
+    })
+    cpCardBody1.appendChild(cpImage)
+    cpCardBody2.appendChild(cpH6)
+    hpCardDiv.append(hpH5, cpCardBody1, cpCardBody2, cpCardBody3)
+    let hp_target = document.getElementById("hpCardTarget")
+    hp_target.appendChild(hpCardDiv)
+  }
+
+function deletePower(power) {
+  let id = power.id
+  fetch(HP_URL + "/" + `${id}`, {
+    method: 'DELETE',
+    headers: {
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    },
+      body: JSON.stringify({
+      id: id
+    })
+  })
+  .then(response => response.json())
+  .then(power => {
+    let del = document.getElementById(`hp-card-${id}`)
+    del.remove()
+  })
+}
